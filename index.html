@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NucleusAI</title>
+<style>
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center; 
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 10px;
+    padding: 10px;
+}
+
+#typing, .email {
+    font-size: 1.7rem; /* Adjusted from 1.5rem to 1.7rem */
+    font-weight: 500;  /* Making the font bolder */
+}
+
+.cursor {
+    border-right: 3px solid black;
+    animation: blink 1s step-end infinite;
+}
+
+.email {
+    opacity: 0;
+    animation: fadeInEmail 2s ease-in-out forwards;
+    animation-delay: 28s; 
+}
+
+@keyframes fadeInEmail {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes blink {
+    from, to { border-color: transparent; }
+    50% { border-color: black; }
+}
+
+/* Media queries for responsive adjustments */
+@media (max-width: 600px) {
+    body {
+        font-size: 5vw; /* Bigger text on smaller screens */
+    }
+
+    #typing, .email {
+        font-size: 1.5rem; /* Smaller base size for small devices */
+    }
+}
+</style>
+</head>
+<body>
+<div id="typing"><span id="text"></span><span class="cursor"></span></div>
+<div class="email">contact@withnucleus.ai</div>
+
+<script>
+    const phrases = ["Meet the compute", "Meet 5000+ GPUs", "Meet the founders ", "Meet passionate researchers from Amazon, Samsung Research", "Meet  intelligence", "Meet the Nucleus!"];
+    const prefix= [5,5,5,5,5,5,5]
+    let currentPhrase = 0;
+    let letterCount = 0;
+    let direction = 1; 
+    const typingSpeed = 100; 
+    const deletingSpeed = 80; 
+    const delayAfterTyping = 1000; 
+    const delayAfterDeleting = 500; 
+    const textElement = document.getElementById('text');
+    const cursorElement = document.querySelector('.cursor');
+
+    function type() {
+        if (direction === 1) { 
+            if (letterCount < phrases[currentPhrase].length) {
+                textElement.textContent += phrases[currentPhrase].charAt(letterCount);
+                letterCount++;
+                setTimeout(type, typingSpeed);
+            } else {
+                if (currentPhrase < phrases.length - 1) {
+                    setTimeout(function() {
+                        direction = -1;
+                        type(); 
+                    }, delayAfterTyping);
+                } else {
+                    cursorElement.style.opacity = '0';
+                }
+            }
+        } else { 
+            if (letterCount > prefix[currentPhrase]) {
+                textElement.textContent = phrases[currentPhrase].substring(0, letterCount - 1);
+                letterCount--;
+                setTimeout(type, deletingSpeed);
+            } else {
+                if (currentPhrase < phrases.length - 1) {
+                    setTimeout(function() {
+                        currentPhrase++;
+                        direction = 1;
+                        type();
+                    }, delayAfterDeleting);
+                }
+            }
+        }
+    }
+
+    type();
+</script>
+</body>
+</html>
